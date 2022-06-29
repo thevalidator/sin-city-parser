@@ -1,7 +1,7 @@
 /*
  * The Krechet Software
  */
-package ru.thekrechetofficial.sincityparser.service.proxy;
+package ru.thekrechetofficial.sincityparser.service.proxy.impl;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import ru.thekrechetofficial.sincityparser.client.AstroProxiApiClient;
 import ru.thekrechetofficial.sincityparser.entity.Proxy;
 import ru.thekrechetofficial.sincityparser.service.connection.UserAgent;
+import ru.thekrechetofficial.sincityparser.service.proxy.ProxyManager;
 
 /**
  * @author theValidator <the.validator@yandex.ru>

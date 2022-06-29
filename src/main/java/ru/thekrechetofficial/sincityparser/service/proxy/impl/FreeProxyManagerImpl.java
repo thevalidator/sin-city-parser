@@ -1,3 +1,5 @@
+package ru.thekrechetofficial.sincityparser.service.proxy.impl;
+
 //package ru.thekrechetofficial.sincityparser.service.proxy;
 
 

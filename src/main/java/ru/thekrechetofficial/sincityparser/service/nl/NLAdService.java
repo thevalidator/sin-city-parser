@@ -1,7 +1,7 @@
 /*
  * The Krechet Software
  */
-package ru.thekrechetofficial.sincityparser.service;
+package ru.thekrechetofficial.sincityparser.service.nl;
 
 import java.util.List;
 import ru.thekrechetofficial.sincityparser.entity.NLAd;

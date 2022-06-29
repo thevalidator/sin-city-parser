@@ -36,14 +36,14 @@ public class SchedulingParseTask implements Runnable {
     public void parseTask() {
 
         if (isParsing == false) {
-
+            isParsing = true;
             try {
 
                 if (!proxyManager.checkProxy()) {
                     proxyManager.changeProxy();
                     TimeUnit.SECONDS.sleep(3);
                 }
-                isParsing = true;
+                
                 adsManager.parseAndSaveAds();
                 lastParse = LocalDateTime.now();
                 

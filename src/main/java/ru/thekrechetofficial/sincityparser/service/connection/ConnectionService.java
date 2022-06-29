@@ -14,7 +14,7 @@ import ru.thekrechetofficial.sincityparser.entity.Proxy;
  */
 public interface ConnectionService {
     
-    Map<String, String> getCoockies() throws IOException;
+    Map<String, String> getCookies() throws IOException;
     
     Connection getConnection(Proxy proxy);
     

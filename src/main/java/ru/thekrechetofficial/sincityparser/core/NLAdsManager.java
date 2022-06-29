@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.thekrechetofficial.sincityparser.dto.OfferDTO;
 import ru.thekrechetofficial.sincityparser.entity.NLAd;
-import ru.thekrechetofficial.sincityparser.service.NLAdService;
+import ru.thekrechetofficial.sincityparser.service.nl.NLAdService;
 import ru.thekrechetofficial.sincityparser.service.connection.ConnectionService;
 import ru.thekrechetofficial.sincityparser.service.parser.NLParseService;
 import ru.thekrechetofficial.sincityparser.service.parser.Gender;
@@ -51,8 +51,8 @@ public class NLAdsManager {
 
     public int parseAndSaveAds() throws IOException, IllegalArgumentException, InterruptedException {
 
-        Map<String, String> coockies = connService.getCoockies();
-        Set<OfferDTO> offers = scanOffers(coockies);
+        Map<String, String> cookies = connService.getCookies();
+        Set<OfferDTO> offers = scanOffers(cookies);
         LOGGER.info("Found new offers: {}", offers.size());
         int counter = 0;
 
@@ -62,7 +62,7 @@ public class NLAdsManager {
 
             NLAd ad;
             try {
-                ad = parseService.getAd(offer, coockies);
+                ad = parseService.getAd(offer, cookies);
                 LOGGER.info("\toffer: {}", ad.getOfferId());
                 ads.add(ad);
                 counter++;
@@ -72,7 +72,7 @@ public class NLAdsManager {
                 throw ex;
             }
 
-            if (counter % 100 == 0) {
+            if (counter % 15 == 0) {
                 manager.changeProxy();
                 saveAds(ads);
                 ads.clear();
@@ -88,13 +88,13 @@ public class NLAdsManager {
 
     }
 
-    private Set<OfferDTO> scanOffers(Map<String, String> coockies) throws IOException, InterruptedException {
+    private Set<OfferDTO> scanOffers(Map<String, String> cookies) throws IOException, InterruptedException {
 
         Set<OfferDTO> offers = new HashSet<>();
 
         for (Gender from : Gender.values()) {
 
-            List<String> parsedOffers = parseService.getAdsOffers(from, coockies);
+            List<String> parsedOffers = parseService.getAdsOffers(from, cookies);
             TimeUnit.SECONDS.sleep(1);
             List<String> existOffers = service.getExist(parsedOffers);
             parsedOffers.removeAll(existOffers);

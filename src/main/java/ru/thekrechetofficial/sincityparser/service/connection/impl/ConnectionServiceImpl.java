@@ -1,7 +1,7 @@
 /*
  * The Krechet Software
  */
-package ru.thekrechetofficial.sincityparser.service.connection;
+package ru.thekrechetofficial.sincityparser.service.connection.impl;
 
 import java.io.IOException;
 import java.util.Map;
@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.thekrechetofficial.sincityparser.entity.Proxy;
+import ru.thekrechetofficial.sincityparser.service.connection.ConnectionService;
+import ru.thekrechetofficial.sincityparser.service.connection.UserAgent;
 import ru.thekrechetofficial.sincityparser.service.proxy.ProxyManager;
 
 /**
@@ -30,7 +32,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
 
     @Override
-    public Map<String, String> getCoockies() throws IOException {
+    public Map<String, String> getCookies() throws IOException {
         
         Connection.Response response = Jsoup.connect(domain + "/offers.php")     //@Value("${resource.nlads}") String domain
                 .proxy(proxyManger.getProxy().getIp(), proxyManger.getProxy().getPort())
