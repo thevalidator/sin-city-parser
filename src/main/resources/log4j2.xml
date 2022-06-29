@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    
+    <Properties>
+        <Property name="LOG_PATTERN">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %-40.40c{1.} : %m%n%ex
+        </Property>
+        <Property name="logsdir">
+            ${sys:catalina.base}/logs/scn
+        </Property>
+    </Properties>
+    
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        
+        <RollingFile name="rollingNLStats" fileName="${logsdir}/nladstat.log"
+            filePattern="${logsdir}/$${date:yyyy-MM}/nladstat-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+        </RollingFile>
+        <File name="errors" fileName="${logsdir}/error.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
+        </File>
+        <!--<File name="nlparser" fileName="${logsdir}/nlparser.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
+        </File>-->
+    </Appenders>
+    
+    <Loggers>
+        <!--<Logger name="ru.thekrechetofficial.sincityparser" level="debug" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>-->
+        <!--<Logger name="ru.thekrechetofficial.sincityparser.service.parser" level="info" additivity="false">
+            <AppenderRef ref="nlparser"/>
+        </Logger>-->
+        <Logger name="ru.thekrechetofficial.sincityparser" level="error" additivity="false">
+            <AppenderRef ref="errors"/>
+        </Logger>
+        <Logger name="ru.thekrechetofficial.sincityparser.core" level="info" additivity="false">
+            <AppenderRef ref="rollingNLStats"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="ConsoleAppender" />
+        </Root>
+    </Loggers>
+    
+</Configuration>
