@@ -25,9 +25,9 @@
         <File name="errors" fileName="${logsdir}/error.log" append="true">
             <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
         </File>
-        <!--<File name="nlparser" fileName="${logsdir}/nlparser.log" append="true">
+        <File name="parser" fileName="${logsdir}/parser.log" append="true">
             <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
-        </File>-->
+        </File>
     </Appenders>
     
     <Loggers>
@@ -44,8 +44,9 @@
             <AppenderRef ref="rollingNLStats"/>
         </Logger>
 
-        <Root level="info">
-            <AppenderRef ref="ConsoleAppender" />
+        <Root level="error">
+            <!--<AppenderRef ref="ConsoleAppender"/>-->
+            <AppenderRef ref="parser" />
         </Root>
     </Loggers>
     
