@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.thekrechetofficial.sincityparser.dto.OfferDTO;
 import ru.thekrechetofficial.sincityparser.entity.NLAd;
-import ru.thekrechetofficial.sincityparser.service.NLAdService;
+import ru.thekrechetofficial.sincityparser.service.nl.NLAdService;
 import ru.thekrechetofficial.sincityparser.service.connection.ConnectionService;
 import ru.thekrechetofficial.sincityparser.service.parser.NLParseService;
 import ru.thekrechetofficial.sincityparser.service.parser.Gender;
@@ -51,50 +51,69 @@ public class NLAdsManager {
 
     public int parseAndSaveAds() throws IOException, IllegalArgumentException, InterruptedException {
 
-        Map<String, String> coockies = connService.getCoockies();
-        Set<OfferDTO> offers = scanOffers(coockies);
+        Map<String, String> cookies = connService.getCookies();
+        Set<OfferDTO> offers = scanOffers(cookies);
         LOGGER.info("Found new offers: {}", offers.size());
         int counter = 0;
 
-        List<NLAd> ads = new ArrayList<>();
+        List<String> ads = new ArrayList<>();
 
         for (OfferDTO offer : offers) {
 
             NLAd ad;
             try {
-                ad = parseService.getAd(offer, coockies);
-                LOGGER.info("\toffer: {}", ad.getOfferId());
-                ads.add(ad);
+                ad = parseService.getAd(offer, cookies);
+                LOGGER.info("\tsaving offer: {}", ad.getOfferId());
+                saveAd(ad);
+                ads.add(ad.getOfferId());
                 counter++;
             } catch (IOException ex) {
-                saveAds(ads);
+                //saveAds(ads);
                 LOGGER.info("Error found, new offers forced saved: {}", counter);
+
+                ads.removeAll(service.getExist(ads));
+                if (!ads.isEmpty()) {
+                    for (String o : ads) {
+                        LOGGER.error("\tCS  ERROR offer LOG: {}", o);
+                    }
+                } else {
+                    LOGGER.info("\tCS  PARSING OK LOG!");
+                }
+                
+
                 throw ex;
             }
 
-            if (counter % 100 == 0) {
+            if (counter % 70 == 0) {
                 manager.changeProxy();
-                saveAds(ads);
-                ads.clear();
             }
-
+            
             TimeUnit.SECONDS.sleep(random.nextInt(3) + 1);
 
         }
-        
-        LOGGER.info("Total new offers saved: {}", counter);
 
+        ads.removeAll(service.getExist(ads));
+        LOGGER.info("Total new offers saved: {}", counter);
+        if (!ads.isEmpty()) {
+            for (String o : ads) {
+                LOGGER.error("\t ERROR offer LOG: {}", o);
+            }
+        } else {
+            LOGGER.info("\t PARSING OK LOG!");
+        }
+
+        // LOGGER.info("Total new offers saved: {}", counter);
         return counter;
 
     }
 
-    private Set<OfferDTO> scanOffers(Map<String, String> coockies) throws IOException, InterruptedException {
+    private Set<OfferDTO> scanOffers(Map<String, String> cookies) throws IOException, InterruptedException {
 
         Set<OfferDTO> offers = new HashSet<>();
 
         for (Gender from : Gender.values()) {
 
-            List<String> parsedOffers = parseService.getAdsOffers(from, coockies);
+            List<String> parsedOffers = parseService.getAdsOffers(from, cookies);
             TimeUnit.SECONDS.sleep(1);
             List<String> existOffers = service.getExist(parsedOffers);
             parsedOffers.removeAll(existOffers);
@@ -111,6 +130,10 @@ public class NLAdsManager {
 
     private void saveAds(List<NLAd> ads) {
         service.saveAll(ads);
+    }
+
+    private void saveAd(NLAd ad) {
+        service.save(ad);
     }
 
 }

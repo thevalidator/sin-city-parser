@@ -9,8 +9,8 @@ import java.util.Map;
 /**
  * @author theValidator <the.validator@yandex.ru>
  */
-public class Coockie {
+public class Cookie {
     
-    Map<String, String> coockies;
+    Map<String, String> cookies;
 
 }

@@ -27,14 +27,14 @@ public abstract class AbstractAd implements Comparable<AbstractAd>, Serializable
     @Column(name = "offerid")
     private String offerId;
     private String title;
-    @Column(name = "txt")
+    @Column(columnDefinition="TEXT", name = "txt")
     private String text;
     private String place;
+    @Column(columnDefinition="TEXT")
     private String contact;
     @Column(name = "created_on")
     private LocalDateTime timestamp;
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "enum", name = "creator")
     private Gender creator;
 
     public AbstractAd() {

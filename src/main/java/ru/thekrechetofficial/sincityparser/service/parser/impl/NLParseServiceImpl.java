@@ -1,7 +1,7 @@
 /*
  * The Krechet Software
  */
-package ru.thekrechetofficial.sincityparser.service.parser;
+package ru.thekrechetofficial.sincityparser.service.parser.impl;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import ru.thekrechetofficial.sincityparser.dto.OfferDTO;
 import ru.thekrechetofficial.sincityparser.entity.NLAd;
 import ru.thekrechetofficial.sincityparser.service.connection.ConnectionService;
+import ru.thekrechetofficial.sincityparser.service.parser.Gender;
+import ru.thekrechetofficial.sincityparser.service.parser.NLParseService;
+import ru.thekrechetofficial.sincityparser.service.parser.Section;
 
 /**
  * @author theValidator <the.validator@yandex.ru>
@@ -44,13 +47,13 @@ public class NLParseServiceImpl implements NLParseService {
     }
 
     @Override
-    public List<String> getAdsOffers(Gender from, Map<String, String> coockies) throws IOException {
+    public List<String> getAdsOffers(Gender from, Map<String, String> cookies) throws IOException {
 
         String offersURL = domain + "/offers.php?from=" + from.getValue() + "&to=&section=" + Section.ALL.getValue();
 
         Document html = connectionService
                             .getProxyConnection(offersURL)
-                            .cookies(coockies)
+                            .cookies(cookies)
                             .referrer(domain + "/offers.php")
                             .get();
         
@@ -74,13 +77,13 @@ public class NLParseServiceImpl implements NLParseService {
     }
 
     @Override
-    public NLAd getAd(OfferDTO offer, Map<String, String> coockies) throws IOException, IllegalArgumentException {
+    public NLAd getAd(OfferDTO offer, Map<String, String> cookies) throws IOException, IllegalArgumentException {
 
         String offerURL = domain + "/offer.php?id=" + offer.getOfferId();
 
         Document html = connectionService
                 .getProxyConnection(offerURL)
-                .cookies(coockies)
+                .cookies(cookies)
                 .referrer(domain + "/offers.php?from=" + offer.getFrom().getValue() + "&to=&section=" + Section.ALL.getValue())
                 .get();
 

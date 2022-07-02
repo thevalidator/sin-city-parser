@@ -15,8 +15,8 @@ import ru.thekrechetofficial.sincityparser.entity.NLAd;
  */
 public interface NLParseService {
     
-    NLAd getAd(OfferDTO offer, Map<String, String> coockies) throws IOException;
+    NLAd getAd(OfferDTO offer, Map<String, String> cookies) throws IOException;
 
-    List<String> getAdsOffers(Gender from, Map<String, String> coockies) throws IOException;
+    List<String> getAdsOffers(Gender from, Map<String, String> cookies) throws IOException;
     
 }

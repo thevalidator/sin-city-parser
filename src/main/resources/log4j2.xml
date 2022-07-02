@@ -10,42 +10,45 @@
         </Property>
     </Properties>
     
+    
     <Appenders>
         <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
         
         <RollingFile name="rollingNLStats" fileName="${logsdir}/nladstat.log"
-            filePattern="${logsdir}/$${date:yyyy-MM}/nladstat-%d{yyyy-MM-dd}-%i.log.gz">
+                     filePattern="${logsdir}/$${date:yyyy-MM}/nladstat-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
             </PatternLayout>
             <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
         </RollingFile>
+        
         <File name="errors" fileName="${logsdir}/error.log" append="true">
             <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
         </File>
-        <!--<File name="nlparser" fileName="${logsdir}/nlparser.log" append="true">
+        <File name="parser" fileName="${logsdir}/parser.log" append="true">
             <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
-        </File>-->
+        </File>
     </Appenders>
     
+    
     <Loggers>
-        <!--<Logger name="ru.thekrechetofficial.sincityparser" level="debug" additivity="false">
-            <AppenderRef ref="ConsoleAppender"/>
-        </Logger>-->
-        <!--<Logger name="ru.thekrechetofficial.sincityparser.service.parser" level="info" additivity="false">
-            <AppenderRef ref="nlparser"/>
-        </Logger>-->
+        <Logger name="ru.thekrechetofficial.sincityparser" level="info" additivity="false">
+            <AppenderRef ref="parser"/>
+        </Logger>
+        
+        
         <Logger name="ru.thekrechetofficial.sincityparser" level="error" additivity="false">
             <AppenderRef ref="errors"/>
         </Logger>
+        
         <Logger name="ru.thekrechetofficial.sincityparser.core" level="info" additivity="false">
             <AppenderRef ref="rollingNLStats"/>
         </Logger>
 
-        <Root level="info">
-            <AppenderRef ref="ConsoleAppender" />
+        <Root level="error">
+            <AppenderRef ref="ConsoleAppender"/>
         </Root>
     </Loggers>
     
