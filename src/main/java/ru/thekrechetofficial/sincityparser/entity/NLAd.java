@@ -35,7 +35,7 @@ public class NLAd extends AbstractAd implements Serializable {
         String s = "✅ [NL] "+ this.getTitle() + "\n\t\uD83D\uDD39 " + this.getText() + "\n\t\uD83D\uDD39 " +
                 this.getContact() + "\n\t\uD83D\uDD39 " + this.getTimestamp()
                 .format(formatter) + " опубликовал(а) " +
-                getCreator().getTextName() + "\n\n";
+                this.getCreator().getTextName() + "\n\n";
 
         return s;
     }

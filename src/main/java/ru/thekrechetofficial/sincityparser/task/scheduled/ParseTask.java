@@ -12,7 +12,8 @@ import org.springframework.scheduling.TriggerContext;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Service;
-import ru.thekrechetofficial.sincityparser.task.SchedulingParseTask;
+import ru.thekrechetofficial.sincityparser.task.ScheduledParseTask;
+import ru.thekrechetofficial.sincityparser.task.ScheduledSendInviteTask;
 
 /**
  * @author theValidator <the.validator@yandex.ru>
@@ -23,20 +24,23 @@ public class ParseTask implements SchedulingConfigurer {
     
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     private static final Random random = new Random();
-    private final SchedulingParseTask task;
+    private final ScheduledParseTask task;
+    private final ScheduledSendInviteTask inviteTask;
     
 
     @Autowired
-    public ParseTask(SchedulingParseTask task) {
+    public ParseTask(ScheduledParseTask task, ScheduledSendInviteTask inviteTask) {
         this.task = task;
+        this.inviteTask = inviteTask;
     }
     
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         
-        taskRegistrar.addTriggerTask(
-                task,
+        taskRegistrar.addCronTask(inviteTask, "0 5 13,19 * * *");
+        
+        taskRegistrar.addTriggerTask(task,
                 (TriggerContext triggerContext) -> {
                     
                     long plusTime = 60_000 * 15;        // 15 minutes
@@ -53,7 +57,7 @@ public class ParseTask implements SchedulingConfigurer {
                     Date startDate = new Date();
                     startDate.setTime(new Date().getTime() + plusTime + plusRandomMin);
                     
-                    SchedulingParseTask.setNextRun(formatter.format(startDate));
+                    ScheduledParseTask.setNextRun(formatter.format(startDate));
                     
                     return startDate;
                 });

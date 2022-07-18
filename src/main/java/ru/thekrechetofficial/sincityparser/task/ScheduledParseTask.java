@@ -17,18 +17,18 @@ import ru.thekrechetofficial.sincityparser.service.proxy.ProxyManager;
  * @author theValidator <the.validator@yandex.ru>
  */
 @Component
-public class SchedulingParseTask implements Runnable {
+public class ScheduledParseTask implements Runnable {
 
     private static volatile String nextRun;
     private volatile static boolean isParsing = false;
     private volatile static LocalDateTime lastParse = LocalDateTime.MIN;
-    private static final Logger LOGGER = LogManager.getLogger(SchedulingParseTask.class);
+    private static final Logger LOGGER = LogManager.getLogger(ScheduledParseTask.class);
     
     private final NLAdsManager adsManager;
     private final ProxyManager proxyManager;
 
     @Autowired
-    public SchedulingParseTask(NLAdsManager adsManager, ProxyManager proxyManager) {
+    public ScheduledParseTask(NLAdsManager adsManager, ProxyManager proxyManager) {
         this.adsManager = adsManager;
         this.proxyManager = proxyManager;
     }
@@ -78,7 +78,7 @@ public class SchedulingParseTask implements Runnable {
     }
 
     public static void setNextRun(String nextRun) {
-        SchedulingParseTask.nextRun = nextRun;
+        ScheduledParseTask.nextRun = nextRun;
     }
     
 }

@@ -5,11 +5,13 @@ package ru.thekrechetofficial.sincityparser.controller;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.thekrechetofficial.sincityparser.api.ApiBalanceResponse;
 import ru.thekrechetofficial.sincityparser.api.ApiPortResponse;
@@ -17,8 +19,10 @@ import ru.thekrechetofficial.sincityparser.client.AstroProxiApiClient;
 import ru.thekrechetofficial.sincityparser.dto.astroclient.balance.BalanceResponseDTO;
 import ru.thekrechetofficial.sincityparser.dto.astroclient.port.PortResponseDTO;
 import ru.thekrechetofficial.sincityparser.dto.astroclient.port.Port;
+import ru.thekrechetofficial.sincityparser.service.mail.MailSenderService;
+import ru.thekrechetofficial.sincityparser.service.nl.InviteService;
 import ru.thekrechetofficial.sincityparser.service.proxy.ProxyManager;
-import ru.thekrechetofficial.sincityparser.task.SchedulingParseTask;
+import ru.thekrechetofficial.sincityparser.task.ScheduledParseTask;
 
 /**
  * @author theValidator <the.validator@yandex.ru>
@@ -28,21 +32,29 @@ public class SincityApiController {
     
     private final ProxyManager manager;
     private final AstroProxiApiClient apiClient;
-    private final SchedulingParseTask parseTask;
+    private final ScheduledParseTask parseTask;
+    private final MailSenderService mailService;
+    private final InviteService inviteService;
 
     @Autowired
-    public SincityApiController(ProxyManager manager, AstroProxiApiClient apiClient, SchedulingParseTask parseTask) {
+    public SincityApiController(ProxyManager manager,
+            AstroProxiApiClient apiClient,
+            ScheduledParseTask parseTask,
+            MailSenderService mailService,
+            InviteService inviteService) {
         this.manager = manager;
         this.apiClient = apiClient;
         this.parseTask = parseTask;
+        this.mailService = mailService;
+        this.inviteService = inviteService;
     }
 
     @GetMapping("/api/status")
     public ResponseEntity<?> getStatus() {
         Map<String, String> map = new HashMap<>();
-        map.put("parsing now", String.valueOf(SchedulingParseTask.isParsing()));
-        map.put("last parse", SchedulingParseTask.getLastParse().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
-        map.put("next parse", SchedulingParseTask.getNextRun());
+        map.put("parsing now", String.valueOf(ScheduledParseTask.isParsing()));
+        map.put("last parse", ScheduledParseTask.getLastParse().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        map.put("next parse", ScheduledParseTask.getNextRun());
         
         return ResponseEntity.ok(map);
         
@@ -64,7 +76,7 @@ public class SincityApiController {
     
     @GetMapping("/api/parse")
     public void startParse() {
-        if (SchedulingParseTask.isParsing() == false) {
+        if (ScheduledParseTask.isParsing() == false) {
             parseTask.run();
         }
     }
@@ -118,6 +130,24 @@ public class SincityApiController {
         response.setCurrency(incomeResponce.getData().getCurrency());
 
         return response;
+    }
+    
+    @GetMapping("/api/mail/test/{email}")
+    public String sendEmail(@PathVariable String email) {
+        
+        mailService.testSend(email);
+        
+        return "success";
+
+    }
+    
+    @GetMapping("/api/invite/next")
+    public String getNextCount() {
+        
+        List<String> emails = inviteService.getDistinctEmails();
+        
+        return "size: " + emails.size();
+
     }
 
 }
