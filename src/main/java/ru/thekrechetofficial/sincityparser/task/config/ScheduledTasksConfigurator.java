@@ -1,7 +1,7 @@
 /*
  * The Krechet Software
  */
-package ru.thekrechetofficial.sincityparser.task.scheduled;
+package ru.thekrechetofficial.sincityparser.task.config;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -19,7 +19,7 @@ import ru.thekrechetofficial.sincityparser.task.ScheduledSendInviteTask;
  * @author theValidator <the.validator@yandex.ru>
  */
 @Service
-public class ParseTask implements SchedulingConfigurer {
+public class ScheduledTasksConfigurator implements SchedulingConfigurer {
     
     
     private static final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -29,7 +29,7 @@ public class ParseTask implements SchedulingConfigurer {
     
 
     @Autowired
-    public ParseTask(ScheduledParseTask task, ScheduledSendInviteTask inviteTask) {
+    public ScheduledTasksConfigurator(ScheduledParseTask task, ScheduledSendInviteTask inviteTask) {
         this.task = task;
         this.inviteTask = inviteTask;
     }

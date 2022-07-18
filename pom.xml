@@ -12,7 +12,7 @@
     
     <groupId>ru.thekrechetofficial</groupId>
     <artifactId>sincityparser</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <packaging>war</packaging>
     <name>sincityparser</name>
     <description>Ads parser for SinCityNights bot</description>

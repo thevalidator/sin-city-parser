@@ -34,9 +34,12 @@ public class ScheduledSendInviteTask implements Runnable {
     public void run() {
         
         List<String> emails = inviteService.getDistinctEmails();
-        mailService.sendInvitation(emails.toArray(String[]::new));
+        if (!emails.isEmpty()) {
+            mailService.sendInvitation(emails.toArray(String[]::new));
+            inviteService.saveAll(emails);
+        }
+        
         LOGGER.info("INVINTATIONS: {}", emails.size());
-        inviteService.saveAll(emails);
         
     }
     

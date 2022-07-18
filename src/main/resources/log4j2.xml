@@ -5,6 +5,7 @@
         <Property name="LOG_PATTERN">
             %d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %-40.40c{1.} : %m%n%ex
         </Property>
+        
         <Property name="logsdir">
             ${sys:catalina.base}/logs/scn
         </Property>
@@ -27,24 +28,36 @@
         <File name="errors" fileName="${logsdir}/error.log" append="true">
             <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
         </File>
+        
         <File name="parser" fileName="${logsdir}/parser.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
+        </File>
+        
+        <File name="invite" fileName="${logsdir}/invite.log" append="true">
             <PatternLayout pattern="%d{yyyy-MM-dd EEE HH:mm:ss} - %msg%n"/>
         </File>
     </Appenders>
     
     
     <Loggers>
-        <Logger name="ru.thekrechetofficial.sincityparser" level="info" additivity="false">
-            <AppenderRef ref="parser"/>
-        </Logger>
-        
-        
-        <Logger name="ru.thekrechetofficial.sincityparser" level="error" additivity="false">
-            <AppenderRef ref="errors"/>
+        <Logger name="ru.thekrechetofficial.sincityparser.task" level="info" additivity="false">
+            <AppenderRef ref="invite"/>
         </Logger>
         
         <Logger name="ru.thekrechetofficial.sincityparser.core" level="info" additivity="false">
             <AppenderRef ref="rollingNLStats"/>
+        </Logger>
+        
+        <Logger name="ru.thekrechetofficial.sincityparser.service.mail.impl" level="error" additivity="false">
+            <AppenderRef ref="errors"/>
+        </Logger>
+        
+        <Logger name="ru.thekrechetofficial.sincityparser" level="info" additivity="false">
+            <AppenderRef ref="parser"/>
+        </Logger>
+        
+        <Logger name="ru.thekrechetofficial.sincityparser" level="error" additivity="true">
+            <AppenderRef ref="errors"/>
         </Logger>
 
         <Root level="error">

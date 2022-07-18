@@ -15,17 +15,16 @@ import ru.thekrechetofficial.sincityparser.entity.Invintation;
 @Repository
 public interface InviteRepository extends JpaRepository<Invintation, Long> {
 
-    @Query(value = "SELECT DISTINCT lower(v.email) \n"
+    @Query(value = "SELECT DISTINCT v.email \n"
             + "FROM (\n"
-                + "	SELECT SUBSTRING(c.contact, '[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*') AS email \n"
-                + "	FROM (\n"
-                + "	SELECT contact FROM nlads WHERE contact ILIKE '%@%.%' ORDER BY created_on DESC LIMIT 35\n"
-                + "	) AS c \n"
-            + "	) AS v\n"
-            + "WHERE v.email IS NOT NULL AND NOT EXISTS (SELECT i.email FROM invintation i)",
+            + "		SELECT LOWER(SUBSTRING(contact, '[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*')) AS email   \n"
+            + "		FROM nlads \n"
+            + "		ORDER BY created_on DESC \n"
+            + "		LIMIT 300\n"
+            + "	) AS v \n"
+            + "	\n"
+            + "WHERE v.email is NOT NULL AND NOT EXISTS (SELECT i.email FROM invintation i) LIMIT 35",
             nativeQuery = true)
     List<String> findDistinctEmails();
-    
-    
 
 }

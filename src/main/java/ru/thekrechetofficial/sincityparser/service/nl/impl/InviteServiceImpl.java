@@ -36,15 +36,12 @@ public class InviteServiceImpl implements InviteService {
 
     @Override
     public void saveAll(List<String> emails) {
-        if (!emails.isEmpty()) {
-            List<Invintation> invintations = new ArrayList<>();
-            LocalDateTime now = LocalDateTime.now();
-            for (String e : emails) {
-                System.out.println(e);
-                invintations.add(new Invintation(e, now));
-            }
-            repository.saveAllAndFlush(invintations);
+        List<Invintation> invintations = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        for (String e : emails) {
+            invintations.add(new Invintation(e, now));
         }
+        repository.saveAllAndFlush(invintations);
     }
 
 }

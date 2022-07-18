@@ -135,7 +135,11 @@ public class SincityApiController {
     @GetMapping("/api/mail/test/{email}")
     public String sendEmail(@PathVariable String email) {
         
-        mailService.testSend(email);
+        try {
+            mailService.testSend(email);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
         
         return "success";
 

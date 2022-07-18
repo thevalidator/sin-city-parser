@@ -42,7 +42,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         SimpleMailMessage msg = new SimpleMailMessage();
 
         msg.setTo(email);
-        msg.setSubject("Testing from illusion");
+        msg.setSubject("Testing message");
         msg.setText("YO! If you see this - everything is fine!");
 
         mailSender.send(msg);
@@ -78,11 +78,10 @@ public class MailSenderServiceImpl implements MailSenderService {
             helper.setFrom("sincitynightsbot@gmail.com", "Sin City");
             helper.setSubject("Intimcity");
             helper.setText(text, true);
-
+            
             mailSender.send(msg);
 
         } catch (MessagingException ex) {
-
             LOGGER.error("Error sending email: {}", ex.getMessage());
         } catch (IOException ex) {
             LOGGER.error("File error: {}", ex.getMessage());
